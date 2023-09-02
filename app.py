@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Define list of class names
 class_names = ["Acne", "Eczema", "Atopic", "Psoriasis", "Tinea", "vitiligo"]
 vgg_model = tf.keras.applications.VGG19(weights='imagenet', include_top=False, input_shape=(180, 180, 3))
-model = tf.keras.models.load_model('./6claass.h5')
+model = tf.keras.models.load_model('6claass.h5')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -35,6 +35,3 @@ def predict_skin_disease():
 
     except Exception as e:
         return jsonify({'error': str(e)})
-
-if __name__ == '__main__':
-    app.run(debug=True)
