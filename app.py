@@ -2,8 +2,10 @@ import numpy as np
 import cv2
 import tensorflow as tf
 from flask import Flask, request, jsonify
+from flask_sslify import SSLify
 
 app = Flask(__name__)
+sslify = SSLify(app)
 
 # Define list of class names
 class_names = ["Acne", "Eczema", "Atopic", "Psoriasis", "Tinea", "vitiligo"]
@@ -39,4 +41,4 @@ def predict_skin_disease():
 main = app
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=443, ssl_context=('/etc/letsencrypt/live/api.mediscan.tech/cert.pem', '/etc/letsencrypt/live/api.mediscan.tech/privkey.pem'))
