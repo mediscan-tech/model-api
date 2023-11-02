@@ -18,7 +18,7 @@ Our data is completely dynamic. The dataset from [CMS](https://data.cms.gov/) is
 ## ✨ Demo
 For the best demo experience, visit [our site](https://mediscan.tech) :)
 
-[Demo Video]([https://google.com](https://www.youtube.com/watch?v=ANMwVpiqOHk))
+[Demo Video](https://www.youtube.com/watch?v=ANMwVpiqOHk)
 
 ## 🚀 Website Tech Stack
 - ✅ **Bootstrapping**: [create-t3-app](https://create.t3.gg).
