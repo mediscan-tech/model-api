@@ -5,16 +5,25 @@ from flask import Flask, request, jsonify
 from tensorflow.keras.applications import VGG19, EfficientNetB0, VGG16, InceptionV3, ResNet50, EfficientNetB3
 from tensorflow.keras.models import Model
 from keras.applications.vgg16 import preprocess_input
+import os
 import urllib.request
+
 app = Flask(__name__)
 
 # Define list of class names
 class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
-vgg_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
-urllib.request.urlretrieve(
-        'https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', 'mediscan_nrfinal.h5')
-model = tf.keras.models.load_model('mediscan_nrfinal.h5')
 
+model_file_path = "mediscan_nrfinal.h5"
+vgg_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
+if not os.path.exists(model_file_path):
+    print("Downloading the model file...")
+    urllib.request.urlretrieve(
+        'https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', model_file_path)
+elif os.path.exists(model_file_path):
+    print(f"Model file '{model_file_path}' already exists.")
+    
+# Load the model
+model = tf.keras.models.load_model(model_file_path)
 @app.route('/', methods=['GET'])
 def home():
     return "<h1>Server is running</h1>"
