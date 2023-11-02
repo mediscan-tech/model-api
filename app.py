@@ -3,7 +3,7 @@ import cv2
 import tensorflow as tf
 from flask import Flask, request, jsonify
 from tensorflow.keras.applications import VGG19, EfficientNetB0, VGG16, InceptionV3, ResNet50, EfficientNetB3
-from tensorflow.keras.models import Model
+from tensorflow.keras.utils import get_file
 from keras.applications.vgg16 import preprocess_input
 import os
 import urllib.request
@@ -14,24 +14,16 @@ app = Flask(__name__)
 class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 threshold_file_size_mb = 350.0
 model_file_path = "mediscan_nrfinal.h5"
+model_file_url = 'https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5'
 vgg_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
-# Check if the model file exists and is not corrupted
-if not os.path.exists(model_file_path):
-    print("Downloading the model file...")
-    urllib.request.urlretrieve(
-        'https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', model_file_path)
-else:
-    # Check the file size to detect possible corruption
-    file_size = os.path.getsize(model_file_path)
-    if file_size < (threshold_file_size_mb * 1024 * 1024):
-        print(f"Model file '{model_file_path}' is too small, likely corrupted. Redownloading...")
-        urllib.request.urlretrieve(
-            'https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', model_file_path)
-    else:
-        print(f"Model file '{model_file_path}' already exists and appears valid.")
-        
+
+# Use get_file to fetch and cache the model file
+model_file_path = get_file(
+    'mediscan_nrfinal.h5', model_file_url, cache_subdir='models'
+)        
 # Load the model
 model = tf.keras.models.load_model(model_file_path)
+
 @app.route('/', methods=['GET'])
 def home():
     return "<h1>Server is running</h1>"
