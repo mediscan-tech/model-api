@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Define list of class names
 class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
-
+threshold_file_size_mb = 350.0
 model_file_path = "mediscan_nrfinal.h5"
 vgg_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
 # Check if the model file exists and is not corrupted
@@ -23,7 +23,7 @@ if not os.path.exists(model_file_path):
 else:
     # Check the file size to detect possible corruption
     file_size = os.path.getsize(model_file_path)
-    if file_size < 1024:
+    if file_size < (threshold_file_size_mb * 1024 * 1024):
         print(f"Model file '{model_file_path}' is too small, likely corrupted. Redownloading...")
         urllib.request.urlretrieve(
             'https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', model_file_path)
