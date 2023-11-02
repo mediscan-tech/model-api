@@ -13,7 +13,7 @@ Source Code for Website: https://github.com/mediscan-tech/www
 
 ---
 ## About our Data:
-Our data is completely dynamic. The dataset from [CMS](https://data.cms.gov/) is updated every few weeks, so our hospital wait times are updated regularly.
+Our data is completely dynamic. The dataset from [CMS](https://data.cms.gov/) is updated every few weeks, so our hospital wait times are updated automatically.
 ---
 ## ✨ Demo
 For the best demo experience, visit [our site](https://mediscan.tech) :)
