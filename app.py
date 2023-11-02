@@ -2,22 +2,13 @@ import numpy as np
 import cv2
 import tensorflow as tf
 from flask import Flask, request, jsonify
-from tensorflow.keras.applications import VGG19, EfficientNetB0, VGG16, InceptionV3, ResNet50, EfficientNetB3
-from tensorflow.keras.models import Model
-from keras.applications.vgg16 import preprocess_input
-import urllib.request
-import os
 
 app = Flask(__name__)
 
 # Define list of class names
-class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
-vgg_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
-file_path = 'mediscan_nrfinal.h5'
-if not os.path.exists(file_path):
-    urllib.request.urlretrieve('https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', file_path)
-
-model = tf.keras.models.load_model(file_path)
+class_names = ["Acne", "Eczema", "Atopic", "Psoriasis", "Tinea", "vitiligo"]
+vgg_model = tf.keras.applications.VGG19(weights='imagenet', include_top=False, input_shape=(180, 180, 3))
+model = tf.keras.models.load_model('6claass.h5')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -28,25 +19,18 @@ def predict_skin_disease():
     try:
         # Load and preprocess image
         image_file = request.files['image']
-
-        def load_img(img_path):
-            images=[]
-            img = cv2.imdecode(np.fromstring(img_path.read(), np.uint8), cv2.IMREAD_COLOR)
-            img=cv2.resize(img,(180,180))
-            images.append(img)
-            x_test=np.asarray(images)
-            test_img=preprocess_input(x_test)
-            features_test=vgg_model.predict(test_img)
-            num_test=x_test.shape[0]
-            f_img=features_test.reshape(1, -1)
-
-            return f_img
-
-        img = load_img(image_file)
+        img = cv2.imdecode(np.fromstring(image_file.read(), np.uint8), cv2.IMREAD_COLOR)
+        img = cv2.resize(img, (180, 180))
+        img = np.array(img) / 255.0
+        img = np.expand_dims(img, axis=0)
+        img = vgg_model.predict(img)
+        img = img.reshape(1, -1)
         
         # Make prediction on preprocessed image
-        predicted_class_index = np.argmax(model.predict(img))
+        pred = model.predict(img)[0]
+        predicted_class_index = np.argmax(pred)
         predicted_class_name = class_names[predicted_class_index]
+
         return jsonify({'predicted_class': predicted_class_name})
 
     except Exception as e:
