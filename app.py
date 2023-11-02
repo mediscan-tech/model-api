@@ -6,14 +6,18 @@ from tensorflow.keras.applications import VGG19, EfficientNetB0, VGG16, Inceptio
 from tensorflow.keras.models import Model
 from keras.applications.vgg16 import preprocess_input
 import urllib.request
+import os
+
 app = Flask(__name__)
 
 # Define list of class names
 class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 vgg_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
-urllib.request.urlretrieve(
-        'https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', 'mediscan_nrfinal.h5')
-model = tf.keras.models.load_model('mediscan_nrfinal.h5')
+file_path = 'mediscan_nrfinal.h5'
+if not os.path.exists(file_path):
+    urllib.request.urlretrieve('https://mediscan.nyc3.digitaloceanspaces.com/mediscan_nrfinal.h5', file_path)
+
+model = tf.keras.models.load_model(file_path)
 
 @app.route('/', methods=['GET'])
 def home():
