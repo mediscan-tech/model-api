@@ -12,11 +12,13 @@ The app is split into two main categories: Giving hospital wait times and predic
 Source Code for Website: https://github.com/mediscan-tech/www
 
 ---
-
+## About our Data:
+Our data is completely dynamic. The dataset from [CMS](https://data.cms.gov/) is updated every few weeks, so our hospital wait times are updated regularly.
+---
 ## ✨ Demo
 For the best demo experience, visit [our site](https://mediscan.tech) :)
 
-[Demo Video](https://google.com)
+[Demo Video]([https://google.com](https://www.youtube.com/watch?v=ANMwVpiqOHk))
 
 ## 🚀 Website Tech Stack
 - ✅ **Bootstrapping**: [create-t3-app](https://create.t3.gg).
