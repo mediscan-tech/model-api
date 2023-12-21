@@ -11,6 +11,7 @@ The app is split into two main categories: Giving hospital wait times and predic
 
 Source Code for Website: https://github.com/mediscan-tech/www
 
+(Digital Ocean comamnd to run the app platform: `gunicorn --worker-tmp-dir /dev/shm app:app`)
 ---
 ## About our Data:
 Our data is completely dynamic. The dataset from [CMS](https://data.cms.gov/) is updated every few weeks, so our hospital wait times are updated automatically.
