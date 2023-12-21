@@ -10,8 +10,6 @@
 The app is split into two main categories: Giving hospital wait times and predicting injuries or diseases through a convolutional neural network (CNN) model.
 
 Source Code for Website: https://github.com/mediscan-tech/www
-
-(Digital Ocean comamnd to run the app platform: `gunicorn --worker-tmp-dir /dev/shm app:app`)
 ---
 ## About our Data:
 Our data is completely dynamic. The dataset from [CMS](https://data.cms.gov/) is updated every few weeks, so our hospital wait times are updated automatically.
@@ -44,6 +42,10 @@ For the best demo experience, visit [our site](https://mediscan.tech) :)
 - ✅ **Datasets**: [Kaggle](https://www.kaggle.com/).
 - ✅ **Framework**: [Flask](https://flask.palletsprojects.com/en/2.0.x/) + [Gunicorn](https://gunicorn.org/).
 - ✅ **Hosting**: [DigitalOcean](https://www.digitalocean.com/).
+
+## Digital Ocean Hosting Tips to Host Model
+- Command to run the app platform: `gunicorn --worker-tmp-dir /dev/shm app:app` <------ (Used to host the flask api that handles image inputs)
+- Host model on Digital Ocean Spaces Object Storage (like AWS S3) so it can download via URL and save hardware space through git commits and etc
 
 ---
 ## 🙌 Contributors 
