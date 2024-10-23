@@ -36,7 +36,7 @@ def safe_load_model(model_path, model_url):
         return None
 
 # Load models
-skin_model = safe_load_model('mediscan_nrfinal.h5', skin_model_url)
+skin_model = safe_load_model('skin_disease_model.h5', skin_model_url)
 nail_model = safe_load_model('nail_disease_model.h5', nail_model_url)
 mouth_model = safe_load_model('mouth_disease_model.h5', mouth_model_url)
 
