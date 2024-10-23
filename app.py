@@ -30,8 +30,9 @@ def home():
 def predict_skin_disease():
     try:
         # Load and preprocess image
+        print('sending images')
         image_file = request.files['image']
-
+        print(image_file)
         def load_img(img_path):
             images=[]
             img = cv2.imdecode(np.fromstring(img_path.read(), np.uint8), cv2.IMREAD_COLOR)
