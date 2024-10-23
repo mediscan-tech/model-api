@@ -26,10 +26,8 @@ model = tf.keras.models.load_model(model_file_path)
 nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Onychogryphosis', 'clubbing', 'Healthy_Nail']
 mouth_class_names = ['Calculus', 'Caries', 'Gingivitis', 'Hypodontia', 'Mouth Ulcer', 'Tooth Discoloration']
 
-# nail_model_url = 'https://mediscan.nyc3.digitaloceanspaces.com/nail_disease_model.h5'
-# mouth_model_url = 'https://mediscan.nyc3.digitaloceanspaces.com/mouth_disease_model.h5'
-
-nail_model = tf.keras.models.load_model('nail_diseases_model.h5')
+nail_model = tf.keras.models.load_model('nail_diseases_model_new.h5')
+print('nail model loaded successfully on TF 2.13')
 mouth_model = tf.keras.models.load_model('mouth_diseases_model.h5')
 
 skin_base_model = EfficientNetB0(weights='imagenet', include_top=False, input_shape=(180, 180, 3))
