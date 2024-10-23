@@ -50,6 +50,7 @@ def predict_skin_disease():
         # Make prediction on preprocessed image
         predicted_class_index = np.argmax(model.predict(img))
         predicted_class_name = class_names[predicted_class_index]
+        print(predicted_class_name)
         return jsonify({'predicted_class': predicted_class_name})
 
     except Exception as e:
