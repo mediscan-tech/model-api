@@ -14,13 +14,11 @@ app = Flask(__name__)
 class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 threshold_file_size_mb = 350.0
 model_file_path = "skin_diseases_model.h5"
-model_file_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/skin_diseases_model.h5'
+# model_file_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/skin_diseases_model.h5'
 vgg_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
 
 # Use get_file to fetch and cache the model file
-model_file_path = get_file(
-    'skin_diseases_model.h5', model_file_url, cache_subdir='models'
-)        
+model_file_path = os.path.join('models', 'skin_diseases_model.h5')
 # Load the model
 model = tf.keras.models.load_model(model_file_path)
 
