@@ -7,8 +7,12 @@ from tensorflow.keras.utils import get_file
 from tensorflow.keras.applications.efficientnet import preprocess_input as efficientnet_preprocess
 from tensorflow.keras.applications.densenet import preprocess_input as densenet_preprocess
 from tensorflow.keras.applications.mobilenet import preprocess_input as mobilenet_preprocess
+import logging
 
 app = Flask(__name__)
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 # Define class names for each model
 skin_class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
@@ -20,10 +24,25 @@ skin_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/skin_diseases
 nail_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/nail_diseases_model.h5'
 mouth_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/oral_diseases_model.h5'
 
+# Safe model loading function
+def safe_load_model(model_path, model_url):
+    try:
+        logging.info(f"Attempting to load model from {model_path}")
+        model = tf.keras.models.load_model(get_file(model_path, model_url, cache_subdir='models'))
+        logging.info(f"Successfully loaded model {model_path}")
+        return model
+    except Exception as e:
+        logging.error(f"Failed to load model {model_path}: {str(e)}")
+        return None
+
 # Load models
-skin_model = tf.keras.models.load_model(get_file('mediscan_nrfinal.h5', skin_model_url, cache_subdir='models'))
-nail_model = tf.keras.models.load_model(get_file('nail_disease_model.h5', nail_model_url, cache_subdir='models'))
-mouth_model = tf.keras.models.load_model(get_file('mouth_disease_model.h5', mouth_model_url, cache_subdir='models'))
+skin_model = safe_load_model('mediscan_nrfinal.h5', skin_model_url)
+nail_model = safe_load_model('nail_disease_model.h5', nail_model_url)
+mouth_model = safe_load_model('mouth_disease_model.h5', mouth_model_url)
+
+# Check if all models loaded successfully
+if not all([skin_model, nail_model, mouth_model]):
+    logging.error("Not all models loaded successfully. Application may not function correctly.")
 
 # Load base models for feature extraction
 skin_base_model = EfficientNetB0(weights='imagenet', include_top=False, input_shape=(180, 180, 3))
@@ -66,9 +85,9 @@ def predict_disease():
         mouth_features = mouth_features.reshape(1, -1)
 
         # Get predictions from all models
-        skin_pred = skin_model.predict(skin_features)
-        nail_pred = nail_model.predict(nail_features)
-        mouth_pred = mouth_model.predict(mouth_features)
+        skin_pred = skin_model.predict(skin_features) if skin_model else np.zeros((1, len(skin_class_names)))
+        nail_pred = nail_model.predict(nail_features) if nail_model else np.zeros((1, len(nail_class_names)))
+        mouth_pred = mouth_model.predict(mouth_features) if mouth_model else np.zeros((1, len(mouth_class_names)))
 
         # Combine predictions
         all_preds = np.concatenate([skin_pred, nail_pred, mouth_pred], axis=1)
@@ -95,6 +114,7 @@ def predict_disease():
         })
 
     except Exception as e:
+        logging.error(f"Error in prediction: {str(e)}")
         return jsonify({'error': str(e)})
 
 if __name__ == "__main__":
