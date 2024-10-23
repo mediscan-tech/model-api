@@ -20,25 +20,34 @@ nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Ony
 mouth_class_names = ['Calculus', 'Caries', 'Gingivitis', 'Hypodontia', 'Mouth Ulcer', 'Tooth Discoloration']
 
 # Model URLs
-skin_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/skin_diseases_model.h5'
-nail_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/nail_diseases_model.h5'
-mouth_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/oral_diseases_model.h5'
+#nail_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/nail_diseases_model.h5'
+#mouth_model_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/oral_diseases_model.h5'
+
+threshold_file_size_mb = 350.0
+model_file_path = "skin_diseases_model.h5"
+model_file_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/skin_diseases_model.h5' 
+
+# Use get_file to fetch and cache the model file
+model_file_path = get_file(
+    'skin_diseases_model.h5', model_file_url, cache_subdir='models'
+)        
+# Load the model
+skin_model = tf.keras.models.load_model(model_file_path)
 
 # Safe model loading function
-def safe_load_model(model_path, model_url):
-    try:
-        logging.info(f"Attempting to load model from {model_path}")
-        model = tf.keras.models.load_model(get_file(model_path, model_url, cache_subdir='models'))
-        logging.info(f"Successfully loaded model {model_path}")
-        return model
-    except Exception as e:
-        logging.error(f"Failed to load model {model_path}: {str(e)}")
-        return None
+# def safe_load_model(model_path, model_url):
+#     try:
+#         logging.info(f"Attempting to load model from {model_path}")
+#         model = tf.keras.models.load_model(get_file(model_path, model_url, cache_subdir='models'))
+#         logging.info(f"Successfully loaded model {model_path}")
+#         return model
+#     except Exception as e:
+#         logging.error(f"Failed to load model {model_path}: {str(e)}")
+#         return None
 
 # Load models
-skin_model = safe_load_model('skin_disease_model.h5', skin_model_url)
-nail_model = safe_load_model('nail_disease_model.h5', nail_model_url)
-mouth_model = safe_load_model('mouth_disease_model.h5', mouth_model_url)
+nail_model = tf.keras.models.load_model('nail_disease_model.h5')
+mouth_model = tf.keras.models.load_model('mouth_disease_model.h5')
 
 # Check if all models loaded successfully
 if not all([skin_model, nail_model, mouth_model]):
