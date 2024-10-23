@@ -23,8 +23,8 @@ model_file_path = os.path.join('models', 'skin_diseases_model.h5')
 # Load the model
 model = tf.keras.models.load_model(model_file_path)
 
-nail_class_names = ['Healthy Nail', 'Nail Fungus', 'Nail Psoriasis', 'Ingrown Nail', 'Nail Tumor']
-mouth_class_names = ['Healthy Mouth', 'Gingivitis', 'Oral Thrush', 'Mouth Ulcer', 'Oral Cancer']
+nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Onychogryphosis', 'clubbing', 'Healthy_Nail']
+mouth_class_names = ['Calculus', 'Caries', 'Gingivitis', 'Hypodontia', 'Mouth Ulcer', 'Tooth Discoloration']
 
 # nail_model_url = 'https://mediscan.nyc3.digitaloceanspaces.com/nail_disease_model.h5'
 # mouth_model_url = 'https://mediscan.nyc3.digitaloceanspaces.com/mouth_disease_model.h5'
