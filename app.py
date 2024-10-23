@@ -29,8 +29,8 @@ mouth_class_names = ['Calculus', 'Caries', 'Gingivitis', 'Hypodontia', 'Mouth Ul
 # nail_model_url = 'https://mediscan.nyc3.digitaloceanspaces.com/nail_disease_model.h5'
 # mouth_model_url = 'https://mediscan.nyc3.digitaloceanspaces.com/mouth_disease_model.h5'
 
-nail_model = tf.keras.models.load_model(get_file('nail_disease_model.h5', cache_subdir='models'))
-mouth_model = tf.keras.models.load_model(get_file('mouth_disease_model.h5',cache_subdir='models'))
+nail_model = tf.keras.models.load_model('nail_disease_model.h5', cache_subdir='models')
+mouth_model = tf.keras.models.load_model('mouth_disease_model.h5',cache_subdir='models')
 
 skin_base_model = EfficientNetB0(weights='imagenet', include_top=False, input_shape=(180, 180, 3))
 nail_base_model = DenseNet121(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
