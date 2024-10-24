@@ -49,4 +49,7 @@ For the best demo experience, visit [our site](https://mediscan.tech) :)
 
 ---
 ## 🙌 Contributors 
-<a href="https://github.com/mediscan-tech/www/graphs/contributors"> <img height="128" src="https://avatars.githubusercontent.com/u/67123306?v=4"/></a><a href="https://github.com/mediscan-tech/model-api/graphs/contributors"> <img height="128" src="https://avatars.githubusercontent.com/u/67066931?v=4"/></a>
+<a href="https://github.com/navincodesalot"><img height="128" src="https://avatars.githubusercontent.com/u/67123306?v=4"/></a>
+<a href="https://github.com/Richp16"> <img height="128" src="https://avatars.githubusercontent.com/u/67066931?v=4"/></a>
+<a href="https://github.com/Viverino1"><img height="128" src="https://avatars.githubusercontent.com/u/82279322?v=4"></a>
+<a href="https://github.com/RishiMadhavan-ui"><img height="128" src="https://avatars.githubusercontent.com/u/86448548?v=4"></a>
