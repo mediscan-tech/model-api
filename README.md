@@ -43,9 +43,12 @@ For the best demo experience, visit [our site](https://mediscan.tech) :)
 - ✅ **Framework**: [Flask](https://flask.palletsprojects.com/en/2.0.x/) + [Gunicorn](https://gunicorn.org/).
 - ✅ **Hosting**: [DigitalOcean](https://www.digitalocean.com/).
 
-## Digital Ocean Hosting Tips to Host Model
-- Command to run the app platform: `gunicorn --worker-tmp-dir /dev/shm app:app` <------ (Used to host the flask api that handles image inputs)
-- Host model on Digital Ocean Spaces Object Storage (like AWS S3) so it can download via URL and save hardware space through git commits and etc
+## Digital Ocean Hosting Tips to Host the 3 Models
+- Command to run the app platform: `gunicorn --worker-tmp-dir /dev/shm --timeout 120 app:app` <------ (Used to host the flask api that handles image inputs for all models. Has a larger timeout to run the models)
+- Full Digital Ocean App Platform Specification: https://gist.github.com/navincodesalot/1e74f2f1ffe3bd22cdc5ab9f1d1de645
+- Host model on Digital Ocean Spaces Object Storage (like AWS S3) so it can download via URL and save hardware space through git commits and etc.
+- setup.py Downloads the Larger Model
+- All Models Trained on Python Version 3.9.7 and Tensorflow 2.13.0
 
 ---
 ## 🙌 Contributors 
