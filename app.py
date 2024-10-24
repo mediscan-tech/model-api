@@ -1,7 +1,8 @@
 import numpy as np
 import cv2
 import tensorflow as tf
-from flask import Flask, request, jsonify   
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from tensorflow.keras.applications import EfficientNetB0, DenseNet121, MobileNet
 from tensorflow.keras.utils import get_file
 from keras.applications.vgg16 import preprocess_input
@@ -10,6 +11,7 @@ import json
 import urllib.request
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://mediscan.care"]}})
 
 skin_class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Onychogryphosis', 'clubbing', 'Healthy_Nail']
