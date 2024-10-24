@@ -67,8 +67,8 @@ def predict_skin_disease():
         nail_features = nail_base_model.predict(nail_img)
         mouth_features = mouth_base_model.predict(mouth_img)
 
-        print('finished predictions')
-        
+        print('finished base model predictions')
+
         # Reshape features
         skin_features = skin_features.reshape(1, -1)
         nail_features = nail_features.reshape(1, -1)
@@ -78,6 +78,8 @@ def predict_skin_disease():
         skin_pred = skin_model.predict(skin_features)
         nail_pred = nail_model.predict(nail_features)
         mouth_pred = mouth_model.predict(mouth_features)
+
+        print('finished predictions')
 
         all_preds = np.concatenate([skin_pred, nail_pred, mouth_pred], axis=1)
         final_class_index = np.argmax(all_preds)
