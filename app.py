@@ -9,6 +9,10 @@ from tensorflow.keras.applications.densenet import preprocess_input as densenet_
 from tensorflow.keras.applications.mobilenet import preprocess_input as mobilenet_preprocess
 import os
 import urllib.request
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 
@@ -16,16 +20,9 @@ app = Flask(__name__)
 skin_class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 threshold_file_size_mb = 350.0
 model_file_path = "skin_diseases_model.h5"
-# model_file_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/skin_diseases_model.h5'
 
-# Use get_file to fetch and cache the model file
-model_file_path = os.path.join('models', 'skin_diseases_model.h5')
-# Load the model
+# Load models
 model = tf.keras.models.load_model(model_file_path)
-
-nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Onychogryphosis', 'clubbing', 'Healthy_Nail']
-mouth_class_names = ['Calculus', 'Caries', 'Gingivitis', 'Hypodontia', 'Mouth Ulcer', 'Tooth Discoloration']
-
 nail_model = tf.keras.models.load_model('nail_diseases_model.h5')
 mouth_model = tf.keras.models.load_model('mouth_diseases_model.h5')
 
@@ -33,7 +30,7 @@ skin_base_model = EfficientNetB0(weights='imagenet', include_top=False, input_sh
 nail_base_model = DenseNet121(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 mouth_base_model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
-print('all models loaded')
+logging.info('All models loaded')
 
 def preprocess_image(img, target_size, preprocess_func):
     img = cv2.resize(img, target_size)
@@ -41,7 +38,7 @@ def preprocess_image(img, target_size, preprocess_func):
     return np.expand_dims(img, axis=0)
 
 def load_and_preprocess_image(img_file):
-    img = cv2.imdecode(np.fromstring(img_file.read(), np.uint8), cv2.IMREAD_COLOR)
+    img = cv2.imdecode(np.frombuffer(img_file.read(), np.uint8), cv2.IMREAD_COLOR)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     skin_img = preprocess_image(img, (180, 180), efficientnet_preprocess)
     nail_img = preprocess_image(img, (224, 224), densenet_preprocess)
@@ -58,8 +55,7 @@ def predict_skin_disease():
     try:
         # Load and preprocess image
         image_file = request.files['image']
-
-        print(image_file)
+        logging.debug(f'Received image file: {image_file.filename}')
 
         skin_img, nail_img, mouth_img = load_and_preprocess_image(image_file)
         
@@ -67,23 +63,21 @@ def predict_skin_disease():
         nail_features = nail_base_model.predict(nail_img)
         mouth_features = mouth_base_model.predict(mouth_img)
 
-        print(skin_features)
-        print(nail_features)
-        print(mouth_features)
-
-        print('finished base model predictions')
+        logging.debug('Finished base model predictions')
 
         # Reshape features
         skin_features = skin_features.reshape(1, -1)
         nail_features = nail_features.reshape(1, -1)
         mouth_features = mouth_features.reshape(1, -1)
 
+        logging.debug('features reshaped')
+
         # Get predictions from all models
-        skin_pred = skin_model.predict(skin_features)
+        skin_pred = model.predict(skin_features)
         nail_pred = nail_model.predict(nail_features)
         mouth_pred = mouth_model.predict(mouth_features)
 
-        print('finished predictions')
+        logging.debug('Finished predictions')
 
         all_preds = np.concatenate([skin_pred, nail_pred, mouth_pred], axis=1)
         final_class_index = np.argmax(all_preds)
@@ -92,17 +86,17 @@ def predict_skin_disease():
         if final_class_index < len(skin_class_names):
             final_class = skin_class_names[final_class_index]
             model_type = 'Skin Disease'
-            print('skin disease detected')
+            logging.info('Skin disease detected')
         elif final_class_index < len(skin_class_names) + len(nail_class_names):
             final_class = nail_class_names[final_class_index - len(skin_class_names)]
             model_type = 'Nail Disease'
-            print('nail disease detected')
+            logging.info('Nail disease detected')
         else:
             final_class = mouth_class_names[final_class_index - len(skin_class_names) - len(nail_class_names)]
             model_type = 'Mouth Disease'
-            print('mouth disease detected')
+            logging.info('Mouth disease detected')
 
-        print(f'predicted_class: {final_class} \n model_type: {model_type}\nconfidence: {confidence}')
+        logging.info(f'Predicted class: {final_class}, Model type: {model_type}, Confidence: {confidence}')
 
         return jsonify({
             'predicted_class': final_class,
@@ -111,6 +105,7 @@ def predict_skin_disease():
         })
 
     except Exception as e:
+        logging.error(f'Error during prediction: {str(e)}')
         return jsonify({'error': str(e)})
 
 if __name__ == "__main__":
