@@ -11,7 +11,7 @@ import json
 import urllib.request
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://mediscan.care"]}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5000", "https://mediscan.care"]}})
 
 skin_class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Onychogryphosis', 'clubbing', 'Healthy_Nail']
