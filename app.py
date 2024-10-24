@@ -67,6 +67,10 @@ def predict_skin_disease():
         nail_features = nail_base_model.predict(nail_img)
         mouth_features = mouth_base_model.predict(mouth_img)
 
+        print(skin_features)
+        print(nail_features)
+        print(mouth_features)
+
         print('finished base model predictions')
 
         # Reshape features
@@ -88,12 +92,15 @@ def predict_skin_disease():
         if final_class_index < len(skin_class_names):
             final_class = skin_class_names[final_class_index]
             model_type = 'Skin Disease'
+            print('skin disease detected')
         elif final_class_index < len(skin_class_names) + len(nail_class_names):
             final_class = nail_class_names[final_class_index - len(skin_class_names)]
             model_type = 'Nail Disease'
+            print('nail disease detected')
         else:
             final_class = mouth_class_names[final_class_index - len(skin_class_names) - len(nail_class_names)]
             model_type = 'Mouth Disease'
+            print('mouth disease detected')
 
         print(f'predicted_class: {final_class} \n model_type: {model_type}\nconfidence: {confidence}')
 
