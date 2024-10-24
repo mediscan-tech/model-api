@@ -44,7 +44,9 @@ For the best demo experience, visit [our site](https://mediscan.tech) :)
 - ✅ **Hosting**: [DigitalOcean](https://www.digitalocean.com/).
 
 ## Digital Ocean Hosting Tips to Host the 3 Models
-- Command to run the app platform: `gunicorn --worker-tmp-dir /dev/shm --timeout 120 app:app` <------ (Used to host the flask api that handles image inputs for all models. Has a larger timeout to run the models)
+- Command to run the app platform: `gunicorn --worker-tmp-dir /dev/shm --timeout 120 app:app`
+  - Used to host the flask api that handles image inputs for all models
+  - Has a larger timeout to run the models
 - Full Digital Ocean App Platform Specification: https://gist.github.com/navincodesalot/1e74f2f1ffe3bd22cdc5ab9f1d1de645
 - Host model on Digital Ocean Spaces Object Storage (like AWS S3) so it can download via URL and save hardware space through git commits and etc.
 - setup.py Downloads the Larger Model
