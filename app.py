@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["https://mediscan.care", "http://localhost:3000", "http://localhost:5000"]}})
 
 skin_class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
-nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Onychogryphosis', 'clubbing', 'Healthy_Nail']
+nail_class_names = ['Acral_Lentiginous_Melanoma','blue_finger', 'clubbing', 'Onychogryphosis', 'pitting']
 mouth_class_names = ['Calculus', 'Caries', 'Gingivitis', 'Hypodontia', 'Mouth Ulcer', 'Tooth Discoloration']
 
 sbase_model = EfficientNetB0(weights = 'imagenet',  include_top = False, input_shape = (180, 180, 3)) 
