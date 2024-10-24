@@ -11,7 +11,6 @@ import os
 import urllib.request
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
@@ -20,9 +19,16 @@ app = Flask(__name__)
 skin_class_names = ['Acne and Rosacea Photos','Melanoma Skin Cancer Nevi and Moles','vitiligo','Tinea Ringworm Candidiasis and other Fungal Infections','Eczema Photos']
 threshold_file_size_mb = 350.0
 model_file_path = "skin_diseases_model.h5"
+# model_file_url = 'https://mediscan.nyc3.cdn.digitaloceanspaces.com/skin_diseases_model.h5'
 
-# Load models
+# Use get_file to fetch and cache the model file
+model_file_path = os.path.join('models', 'skin_diseases_model.h5')
+# Load the model
 model = tf.keras.models.load_model(model_file_path)
+
+nail_class_names = ['blue_finger', 'Acral_Lentiginous_Melanoma', 'pitting', 'Onychogryphosis', 'clubbing', 'Healthy_Nail']
+mouth_class_names = ['Calculus', 'Caries', 'Gingivitis', 'Hypodontia', 'Mouth Ulcer', 'Tooth Discoloration']
+
 nail_model = tf.keras.models.load_model('nail_diseases_model.h5')
 mouth_model = tf.keras.models.load_model('mouth_diseases_model.h5')
 
@@ -38,7 +44,7 @@ def preprocess_image(img, target_size, preprocess_func):
     return np.expand_dims(img, axis=0)
 
 def load_and_preprocess_image(img_file):
-    img = cv2.imdecode(np.frombuffer(img_file.read(), np.uint8), cv2.IMREAD_COLOR)
+    img = cv2.imdecode(np.fromstring(img_file.read(), np.uint8), cv2.IMREAD_COLOR)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     skin_img = preprocess_image(img, (180, 180), efficientnet_preprocess)
     nail_img = preprocess_image(img, (224, 224), densenet_preprocess)
@@ -55,7 +61,8 @@ def predict_skin_disease():
     try:
         # Load and preprocess image
         image_file = request.files['image']
-        logging.debug(f'Received image file: {image_file.filename}')
+
+        logging.debug('Received image file')
 
         skin_img, nail_img, mouth_img = load_and_preprocess_image(image_file)
         
@@ -70,10 +77,10 @@ def predict_skin_disease():
         nail_features = nail_features.reshape(1, -1)
         mouth_features = mouth_features.reshape(1, -1)
 
-        logging.debug('features reshaped')
+        logging.debug('Reshaped features')
 
         # Get predictions from all models
-        skin_pred = model.predict(skin_features)
+        skin_pred = skin_model.predict(skin_features)
         nail_pred = nail_model.predict(nail_features)
         mouth_pred = mouth_model.predict(mouth_features)
 
@@ -105,7 +112,6 @@ def predict_skin_disease():
         })
 
     except Exception as e:
-        logging.error(f'Error during prediction: {str(e)}')
         return jsonify({'error': str(e)})
 
 if __name__ == "__main__":
