@@ -67,6 +67,8 @@ def predict_skin_disease():
         nail_features = nail_base_model.predict(nail_img)
         mouth_features = mouth_base_model.predict(mouth_img)
 
+        print('finished predictions')
+        
         # Reshape features
         skin_features = skin_features.reshape(1, -1)
         nail_features = nail_features.reshape(1, -1)
