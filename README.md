@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://i.imgur.com/5LJxBt4.pngg" height="350" alt="AgentGPT Logo"/>
+  <img src="https://i.ibb.co/Zptgtrv5/Mediscan-tech-You-Tube-Thumbnail.png" height="350" alt="AgentGPT Logo"/>
 </p>
 <p align="center">
   <em>🩺 Healthcare at your fingertips! 🖐   </em>
